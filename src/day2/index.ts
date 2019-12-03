@@ -42,16 +42,8 @@ function findSpecificPos0(
 
 const args = process.argv.slice(2);
 const inputFile = args[0];
-const noun = +args[1] || 12;
-const verb = +args[2] || 2;
 if (!inputFile || typeof inputFile !== "string") {
   throw new Error("Invalid input filename given as args");
-}
-if (!noun || typeof noun !== "number") {
-  throw new Error("Invalid noun given as args");
-}
-if (!verb || typeof verb !== "number") {
-  throw new Error("Invalid verb given as args");
 }
 
 parseProgramFile(inputFile)
