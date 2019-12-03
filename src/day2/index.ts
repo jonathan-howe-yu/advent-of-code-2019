@@ -18,14 +18,23 @@ function parseProgramFile(filename: string): Promise<number[]> {
   });
 }
 
-const inputFile = process.argv.slice(2)[0];
-if (!inputFile) {
+const args = process.argv.slice(2);
+const inputFile = args[0];
+const noun = +args[1] || 12;
+const verb = +args[2] || 2;
+if (!inputFile || typeof inputFile !== "string") {
   throw new Error("Invalid input filename given as args");
+}
+if (!noun || typeof noun !== "number") {
+  throw new Error("Invalid noun given as args");
+}
+if (!verb || typeof verb !== "number") {
+  throw new Error("Invalid verb given as args");
 }
 
 parseProgramFile(inputFile)
   .then(program => {
-    fixProgram(program, 12, 2);
+    fixProgram(program, noun, verb);
     runProgram(program);
     console.log(`Program data at pos 0: ${program[0]}`);
   })
