@@ -1,5 +1,5 @@
 import readline from "readline";
-import { readFile } from "fs";
+import { promises } from "fs";
 import solveDay1 from "./day1";
 import solveDay2 from "./day2";
 
@@ -14,42 +14,27 @@ rl.on("close", () => {
 });
 
 (function askWhatDay() {
-  setTimeout(
-    () =>
-      rl.question(
-        "What day do you want to see the solution for? [1-2] (Ctrl+C to close) ",
-        response => {
-          chooseDay(+response).then(
-            () => {
-              askWhatDay();
-              console.log("");
-            },
-            err => {
-              console.error(err);
-              rl.close();
-            }
-          );
+  rl.question(
+    "What day do you want to see the solution for? [1-2] (Ctrl+C to close) ",
+    response => {
+      chooseDay(+response).then(
+        () => {
+          askWhatDay();
+          console.log("");
+        },
+        err => {
+          console.error(err);
+          rl.close();
         }
-      ),
-    0
+      );
+    }
   );
 })();
-
-function readFilePromise(filename: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    readFile(filename, "utf8", (err, data: string) => {
-      if (err) reject(err);
-
-      // data is line-break-separated list of numbers
-      resolve(data);
-    });
-  });
-}
 
 async function chooseDay(day: number): Promise<void> {
   switch (day) {
     case 1: {
-      const data = (await readFilePromise("./input/day1.txt"))
+      const data = (await promises.readFile("./input/day1.txt", "utf8"))
         .split("\n")
         .map(e => +e);
 
@@ -58,7 +43,7 @@ async function chooseDay(day: number): Promise<void> {
     }
 
     case 2: {
-      const data = (await readFilePromise("./input/day2.txt"))
+      const data = (await promises.readFile("./input/day2.txt", "utf8"))
         .split(",")
         .map(e => +e);
 
