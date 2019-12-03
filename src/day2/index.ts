@@ -18,6 +18,28 @@ function parseProgramFile(filename: string): Promise<number[]> {
   });
 }
 
+function solveForPos0(program: number[], noun: number, verb: number): number {
+  const programClone = [...program];
+  fixProgram(programClone, noun, verb);
+  runProgram(programClone);
+  return programClone[0];
+}
+
+function findSpecificPos0(
+  program: number[],
+  pos0Value: number
+): { noun: number; verb: number } {
+  for (let noun = 0; noun < 100; noun++) {
+    for (let verb = 0; verb < 100; verb++) {
+      if (solveForPos0(program, noun, verb) === pos0Value) {
+        return { noun, verb };
+      }
+    }
+  }
+
+  throw new Error("Unable to find pos0Value within noun and verb range");
+}
+
 const args = process.argv.slice(2);
 const inputFile = args[0];
 const noun = +args[1] || 12;
@@ -34,8 +56,12 @@ if (!verb || typeof verb !== "number") {
 
 parseProgramFile(inputFile)
   .then(program => {
-    fixProgram(program, noun, verb);
-    runProgram(program);
-    console.log(`Program data at pos 0: ${program[0]}`);
+    const part1Solution = solveForPos0(program, 12, 2);
+    console.log(`Part 1 program data at pos 0: ${part1Solution}`);
+
+    const { noun, verb } = findSpecificPos0(program, 19690720);
+    console.log(
+      `Part 2 solution: 100 * ${noun} + ${verb} = ${100 * noun + verb}`
+    );
   })
   .catch(err => console.error(err));
